@@ -1,7 +1,7 @@
 # llc-phone
 
-**ClawHub skill** — low-latency inbound and outbound AI phone calls via the
-OpenAI Realtime API and Twilio.
+**OpenClaw skill package** for low-latency inbound and outbound AI phone calls
+via the OpenAI Realtime API and Twilio.
 
 Covers the full stack for both directions: pre-warm / pre-accept warm, AI
 IVR, receptionist flows, CSR with database-backed tools, VAD tuning, prompt
@@ -12,16 +12,10 @@ practitioner research current as of 2026-04-02. Treat vendor docs as
 authoritative, and treat operational latency or behavior claims here as
 well-sourced guidance to validate in your own environment.
 
-## Quick install
+## Local install
 
 ```bash
-openclaw skills install llc-phone
-```
-
-Or with the ClawHub CLI:
-
-```bash
-clawhub install llc-phone
+cp -r llc-phone ~/.openclaw/skills/
 ```
 
 After installing, start a new OpenClaw session — skills are snapshotted at
@@ -95,10 +89,6 @@ docs/
   08-known-issues.md        Operational notes and watch-later items
   09-openclaw-config.md     openclaw.json config reference
 ```
-
-## Suggested publish tags
-
-`openai`, `realtime`, `voice`, `twilio`, `phone`, `ivr`, `customer-support`
 
 ## Version history
 

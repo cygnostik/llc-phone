@@ -1,16 +1,6 @@
 # 09 — OpenClaw Configuration Reference
 
-## Installing this skill
-
-From ClawHub (once published):
-```bash
-openclaw skills install llc-phone
-```
-
-Or with the ClawHub CLI:
-```bash
-clawhub install llc-phone
-```
+## Installing this skill locally
 
 Manual install (copy folder):
 ```bash
@@ -141,18 +131,6 @@ const config = {
   "skills": { "load": { "watch": true, "watchDebounceMs": 250 } }
 }
 ```
-
-## Publishing to ClawHub
-
-```bash
-npm install -g clawhub
-clawhub login
-cd llc-phone
-clawhub skill publish . --version <version> --changelog "<summary>" --tags "openai,realtime,voice,twilio,phone,ivr,customer-support"
-```
-
-Before publishing, confirm that `requires.env` still matches what the skill
-actually uses, and re-check the current ClawHub docs for any CLI changes.
 
 ## Security notes
 
