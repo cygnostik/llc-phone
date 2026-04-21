@@ -116,7 +116,7 @@ if (data.event === "media" && openaiWs.readyState === WebSocket.OPEN) {
 ## Switching VAD and adding tools after first turn
 
 ```javascript
-// After first Voss/AI turn completes (response.done event):
+// After first AI turn completes (response.done event):
 openaiWs.send(JSON.stringify({
   type: "session.update",
   session: {

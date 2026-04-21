@@ -4,7 +4,7 @@ Here is the: <a href="https://github.com/cygnostik/llc-phone">GitHub Link</a>
 
 Combine OpenAI's Realtime API and Twilio's phone calling capability to build an AI calling assistant.
 
-<img width="1728" alt="Screenshot 2024-12-18 at 4 59 30 PM" src="https://github.com/user-attachments/assets/d3c8dcce-b339-410c-85ca-864a8e0fc326" />
+<img width="1728" alt="Screenshot 2024-12-18 at 4 59 30 PM" src="https://github.com/user-attachments/assets/d3c8dcce-b339-410c-85ca-864a8e0fc326" />
 
 ## Quick Setup
 
@@ -24,7 +24,7 @@ This repo implements a phone calling assistant with the Realtime API and Twilio,
 
 1. `webapp`: NextJS app to serve as a frontend for call configuration and transcripts
 2. `websocket-server`: Express backend that handles connection from Twilio, connects it to the Realtime API, and forwards messages to the frontend
-<img width="1514" alt="Screenshot 2024-12-20 at 10 32 40 AM" src="https://github.com/user-attachments/assets/61d39b88-4861-4b6f-bfe2-796957ab5476" />
+<img width="1514" alt="Screenshot 2024-12-20 at 10 32 40 AM" src="https://github.com/user-attachments/assets/61d39b88-4861-4b6f-bfe2-796957ab5476" />
 
 Twilio uses TwiML (a form of XML) to specify how to handle a phone call. When a call comes in we tell Twilio to start a bi-directional stream to our backend, where we forward messages between the call and the Realtime API. (`{{WS_URL}}` is replaced with our websocket endpoint.)
 
@@ -90,54 +90,6 @@ npm run dev
 
 Set your credentials in `webapp/.env` and `websocket-server` - see `webapp/.env.example` and `websocket-server.env.example` for reference.
 
-### Environment variables
-
-Copy the example env files and fill in the values for your own environment before running.
-
-Required in `websocket-server/.env`:
-- `OPENAI_API_KEY`
-- `PUBLIC_URL`
-- `TWILIO_ACCOUNT_SID`
-- `TWILIO_AUTH_TOKEN`
-- `TWILIO_PHONE_NUMBER`
-
-Usually required for customization in `websocket-server/.env`:
-- `COMPANY_NAME`
-- `COMPANY_DOMAIN`
-- `COMPANY_CITY`
-- `COMPANY_REGION`
-- `BUSINESS_DESCRIPTOR`
-- `FOUNDER_NAME`
-- `ASSISTANT_NAME`
-- `INBOUND_GREETING`
-- `BUSINESS_TIMEZONE` (IANA zone, default `America/Los_Angeles`)
-- `BUSINESS_HOURS_START` (hour in 24h format, default `8`)
-- `BUSINESS_HOURS_END` (hour in 24h format, default `19`)
-
-Optional integrations in `websocket-server/.env`:
-- `TRANSFER_TARGET_LABEL`
-- `TRANSFER_TARGET_NUMBER`
-- `RADICALE_URL`
-- `RADICALE_USERNAME`
-- `RADICALE_PASSWORD`
-- `RADICALE_CALENDAR_PATH`
-- `CLICKSEND_USERNAME`
-- `CLICKSEND_API_KEY`
-- `CLICKSEND_FROM`
-- `BUSINESS_SMS_FROM`
-- `TRANSCRIPT_WEBHOOK_URL`
-- `TRANSCRIPT_WEBHOOK_BEARER_TOKEN`
-- `OPENAI_SAVED_PROMPT_ID` (optional OpenAI saved prompt to use as outbound baseline)
-- `OPENAI_SAVED_PROMPT_VERSION` (default `1`)
-
-Required in `webapp/.env` when using the web UI features:
-- `TWILIO_ACCOUNT_SID`
-- `TWILIO_AUTH_TOKEN`
-
-Important:
-- Do not commit populated `.env` files.
-- If you are not using calendar, SMS, transfer, or transcript webhook features, leave those related variables blank and disable those flows in your deployment review.
-
 ### Ngrok
 
 Twilio needs to be able to reach your websocket server. If you're running it locally, your ports are inaccessible by default. [ngrok](https://ngrok.com/) can make them temporarily accessible.
@@ -154,47 +106,10 @@ Make note of the `Forwarding` URL. (e.g. `https://54c5-35-170-32-42.ngrok-free.a
 
 Your server should now be accessible at the `Forwarding` URL when run, so set the `PUBLIC_URL` in `websocket-server/.env`. See `websocket-server/.env.example` for reference.
 
-# Example custom behavior (implementation notes)
-
-## Outbound scenario safety
-
-`POST /outbound-call` now requires a valid scenario unless appointment context clearly implies confirmation.
-
-Accepted scenarios:
-- `confirmation`
-- `cold_call`
-- `sales_call`
-- `crisis`
-- `custom`
-
-Rules:
-- If `scenario=confirmation`, both `appointment_date` and `appointment_time` are required.
-- If no scenario is provided and there is no appointment context, the request is rejected (`400`) instead of silently defaulting to confirmation.
-
-## Stream parameters
-
-- `POST /twiml` forwards inbound caller ID from Twilio `From` to websocket stream param `from`.
-- `POST /twiml-outbound` forwards `direction`, `caller_name`, `to`, `purpose`, and `scenario` to websocket stream parameters.
-
-## Warm transfer
-
-`transfer_call` now performs a live Twilio call update when an active call exists:
-1. Sends SMS context to the configured transfer target (if ClickSend creds configured).
-2. Updates the active Twilio call to `/twiml-transfer`.
-3. `/twiml-transfer` dials the configured transfer target and uses `/twiml-transfer-whisper` to provide a short pre-bridge whisper context.
-
-Transfer is gated by configured business hours.
-
-## Transcript webhook auth
-
-Transcript and outbound-status webhooks can POST to a generic webhook when configured with:
-- `TRANSCRIPT_WEBHOOK_URL`
-- `TRANSCRIPT_WEBHOOK_BEARER_TOKEN` (optional)
-
 # Reference Documentation
 
 Architectural reference in [`docs/`](docs/) — practitioner notes on the
-OpenAI Realtime API + Twilio stack used by this repo.
+OpenAI Realtime API + Twilio stack.
 
 | File | Content |
 |---|---|

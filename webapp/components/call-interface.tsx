@@ -19,9 +19,7 @@ const CallInterface = () => {
 
   useEffect(() => {
     if (allConfigsReady && !ws) {
-      const logsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const logsHost = process.env.NEXT_PUBLIC_LOGS_WS_HOST || window.location.host;
-      const newWs = new WebSocket(`${logsProtocol}//${logsHost}/logs`);
+      const newWs = new WebSocket("ws://localhost:8081/logs");
 
       newWs.onopen = () => {
         console.log("Connected to logs websocket");

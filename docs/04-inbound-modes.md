@@ -164,7 +164,7 @@ async function handleWarmTransfer(callSid, agentNumber, introduction) {
 
 ---
 
-## Mode 2: Claw Receptionist
+## Mode 2: Receptionist
 
 Greets by company name, identifies caller needs, checks availability,
 routes or takes a structured message.
