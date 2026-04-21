@@ -191,6 +191,22 @@ Transcript and outbound-status webhooks can POST to a generic webhook when confi
 - `TRANSCRIPT_WEBHOOK_URL`
 - `TRANSCRIPT_WEBHOOK_BEARER_TOKEN` (optional)
 
+# Reference Documentation
+
+Architectural reference in [`docs/`](docs/) — practitioner notes on the
+OpenAI Realtime API + Twilio stack used by this repo.
+
+| File | Content |
+|---|---|
+| [`docs/01-overview.md`](docs/01-overview.md) | Model landscape, selection notes |
+| [`docs/02-session-config.md`](docs/02-session-config.md) | `session.update` reference + recommended defaults |
+| [`docs/03-prewarm-outbound.md`](docs/03-prewarm-outbound.md) | Outbound pre-warm: buffer, fallback, edge cases |
+| [`docs/04-inbound-modes.md`](docs/04-inbound-modes.md) | Inbound: AI IVR, Receptionist, CSR with DB |
+| [`docs/05-async-tools.md`](docs/05-async-tools.md) | Async tool calling (inbound + outbound) |
+| [`docs/06-latency-tuning.md`](docs/06-latency-tuning.md) | All latency levers after pre-warm / pre-accept |
+| [`docs/07-twilio-integration.md`](docs/07-twilio-integration.md) | Twilio audio format, edge colocation, AMD, stream events |
+| [`docs/08-known-issues.md`](docs/08-known-issues.md) | Operational notes, field reports, watch-later items |
+
 # Additional Notes
 
 This repo isn't polished, and the security practices leave some to be desired. Please only use this as reference, and make sure to audit your app with security and engineering before deploying!
