@@ -1,8 +1,0 @@
-*.log
-*.env
-.env*
-.git/
-node_modules/
-.DS_Store
-Thumbs.db
-*.swp
