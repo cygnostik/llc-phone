@@ -27,12 +27,12 @@ export async function postPhoneTranscript(payload: Record<string, any>, source: 
 
     if (!resp.ok) {
       const body = await resp.text();
-      console.error(`[HOOK:${source}] phone-transcript webhook failed (${resp.status}):`, body || "(empty)");
+      console.error(`[HOOK:${source}] call webhook failed (${resp.status}):`, body || "(empty)");
       return;
     }
 
-    console.log(`[HOOK:${source}] phone-transcript webhook delivered (${resp.status})`);
+    console.log(`[HOOK:${source}] call webhook delivered (${resp.status})`);
   } catch (err: any) {
-    console.error(`[HOOK:${source}] phone-transcript webhook error:`, err.message || err);
+    console.error(`[HOOK:${source}] call webhook error:`, err.message || err);
   }
 }

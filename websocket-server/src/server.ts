@@ -42,7 +42,7 @@ const CLICKSEND_USER = process.env.CLICKSEND_USERNAME || "";
 const CLICKSEND_KEY = process.env.CLICKSEND_API_KEY || "";
 const CLICKSEND_FROM = process.env.CLICKSEND_FROM || "";
 const TRANSFER_TARGET_NUMBER = process.env.TRANSFER_TARGET_NUMBER || "";
-const TRANSFER_TARGET_LABEL = process.env.TRANSFER_TARGET_LABEL || "the on-call teammate";
+const TRANSFER_TARGET_LABEL = process.env.TRANSFER_TARGET_LABEL || "the designated teammate";
 
 const VALID_SCENARIOS: OutboundScenario[] = ["confirmation", "cold_call", "sales_call", "crisis", "custom"];
 

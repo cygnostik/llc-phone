@@ -15,12 +15,12 @@ const TWILIO_NUMBER = process.env.TWILIO_PHONE_NUMBER || "";
 const PUBLIC_URL = process.env.PUBLIC_URL || "";
 
 const TRANSFER_TARGET_NUMBER = process.env.TRANSFER_TARGET_NUMBER || "";
-const TRANSFER_TARGET_LABEL = process.env.TRANSFER_TARGET_LABEL || "on-call teammate";
-const ASSISTANT_NAME = process.env.ASSISTANT_NAME || "Avery";
-const COMPANY_NAME = process.env.COMPANY_NAME || "Example Company";
-const COMPANY_DOMAIN = process.env.COMPANY_DOMAIN || "example.com";
+const TRANSFER_TARGET_LABEL = process.env.TRANSFER_TARGET_LABEL || "designated teammate";
+const ASSISTANT_NAME = process.env.ASSISTANT_NAME || "Assistant";
+const COMPANY_NAME = process.env.COMPANY_NAME || "Your Company";
+const COMPANY_DOMAIN = process.env.COMPANY_DOMAIN || "yourdomain.com";
 const BUSINESS_SMS_FROM = process.env.BUSINESS_SMS_FROM || "";
-const TIMEZONE = process.env.BUSINESS_TIMEZONE || "America/Los_Angeles";
+const TIMEZONE = process.env.BUSINESS_TIMEZONE || "UTC";
 const BUSINESS_HOURS_START = parseInt(process.env.BUSINESS_HOURS_START || "8", 10);
 const BUSINESS_HOURS_END = parseInt(process.env.BUSINESS_HOURS_END || "19", 10);
 

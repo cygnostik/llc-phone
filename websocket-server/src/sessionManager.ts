@@ -2,17 +2,17 @@ import { RawData, WebSocket } from "ws";
 import functions from "./functionHandlers";
 import { postPhoneTranscript } from "./systemWebhook";
 
-const ASSISTANT_NAME = process.env.ASSISTANT_NAME || "Avery";
-const COMPANY_NAME = process.env.COMPANY_NAME || "Example Company";
-const COMPANY_DOMAIN = process.env.COMPANY_DOMAIN || "example.com";
-const FOUNDER_NAME = process.env.FOUNDER_NAME || "the founder";
+const ASSISTANT_NAME = process.env.ASSISTANT_NAME || "Assistant";
+const COMPANY_NAME = process.env.COMPANY_NAME || "Your Company";
+const COMPANY_DOMAIN = process.env.COMPANY_DOMAIN || "yourdomain.com";
+const FOUNDER_NAME = process.env.FOUNDER_NAME || "your team";
 const COMPANY_CITY = process.env.COMPANY_CITY || "your city";
 const COMPANY_REGION = process.env.COMPANY_REGION || "your region";
-const BUSINESS_DESCRIPTOR = process.env.BUSINESS_DESCRIPTOR || "technology services company";
+const BUSINESS_DESCRIPTOR = process.env.BUSINESS_DESCRIPTOR || "business services company";
 const INBOUND_GREETING = process.env.INBOUND_GREETING || `${COMPANY_NAME}, this is ${ASSISTANT_NAME}. How can I help you?`;
 
 interface TranscriptEntry {
-  role: "voss" | "caller";
+  role: "assistant" | "caller";
   text: string;
   timestamp: string;
 }
@@ -237,7 +237,7 @@ export function preWarmSession(openAIApiKey: string): Promise<boolean> {
         console.log("[PRE-WARM] Greeting transcript:", event.transcript);
         if (session.transcript) {
           session.transcript.push({
-            role: "voss",
+            role: "assistant",
             text: event.transcript,
             timestamp: new Date().toISOString(),
           });
@@ -528,7 +528,7 @@ function handleModelMessage(data: RawData) {
     console.log("\n[CALL] Full transcript:", event.transcript || "(empty)");
     if (event.transcript && session.transcript) {
       session.transcript.push({
-        role: "voss",
+        role: "assistant",
         text: event.transcript,
         timestamp: new Date().toISOString(),
       });
@@ -731,7 +731,7 @@ async function sendTranscriptToWebhook() {
   }
 
   const transcriptText = session.transcript
-    .map((entry) => `[${entry.role === "voss" ? ASSISTANT_NAME : "Caller"}] ${entry.text}`)
+    .map((entry) => `[${entry.role === "assistant" ? ASSISTANT_NAME : "Caller"}] ${entry.text}`)
     .join("\n");
 
   const payload: Record<string, any> = {
@@ -833,7 +833,7 @@ function getOutboundInstructions(ctx: OutboundContext): string {
 
 CALL BEHAVIOR: Outbound call. Greet first as soon as they answer, then identify yourself and state purpose. 1-2 sentences per turn.
 
-VOICE: Late-night radio DJ. Calm, low energy, downflect sentences. Never rushed, never performative.`;
+VOICE: Calm, low energy, measured pacing, steady tone. Never rushed or performative.`;
 
   const services = `
 
@@ -894,7 +894,7 @@ function getInboundInstructions(): string {
 
 VOICE STYLE:
 - calm, composed, downflect the end of a sentence
-- think late night radio DJ voice — that's you
+- measured pacing, steady tone, low urgency unless needed
 - relaxed, unhurried, low energy, confident
 
 About ${COMPANY_NAME}:

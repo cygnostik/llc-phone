@@ -42,7 +42,7 @@ export default function ChecklistAndConfig({
 
   const [allChecksPassed, setAllChecksPassed] = useState(false);
   const [webhookLoading, setWebhookLoading] = useState(false);
-  const [ngrokLoading, setNgrokLoading] = useState(false);
+  const [tunnelLoading, setTunnelLoading] = useState(false);
 
   const appendedTwimlUrl = publicUrl ? `${publicUrl}/twiml` : "";
   const isWebhookMismatch =
@@ -126,7 +126,7 @@ export default function ChecklistAndConfig({
 
   const checkNgrok = async () => {
     if (!localServerUp || !publicUrl) return;
-    setNgrokLoading(true);
+    setTunnelLoading(true);
     let success = false;
     for (let i = 0; i < 5; i++) {
       try {
@@ -146,7 +146,7 @@ export default function ChecklistAndConfig({
     if (!success) {
       setPublicUrlAccessible(false);
     }
-    setNgrokLoading(false);
+    setTunnelLoading(false);
   };
 
   const checklist = useMemo(() => {
@@ -217,9 +217,9 @@ export default function ChecklistAndConfig({
         field: null,
       },
       {
-        label: "Start ngrok",
+        label: "Start public tunnel",
         done: publicUrlAccessible,
-        description: "Then set ngrok URL in websocket-server/.env",
+        description: "Then set the public URL in websocket-server/.env",
         field: (
           <div className="flex items-center gap-2 w-full">
             <div className="flex-1">
@@ -229,13 +229,13 @@ export default function ChecklistAndConfig({
               <Button
                 variant="outline"
                 onClick={checkNgrok}
-                disabled={ngrokLoading || !localServerUp || !publicUrl}
+                disabled={tunnelLoading || !localServerUp || !publicUrl}
                 className="w-full"
               >
-                {ngrokLoading ? (
+                {tunnelLoading ? (
                   <Loader2 className="mr-2 h-4 animate-spin" />
                 ) : (
-                  "Check ngrok"
+                  "Check tunnel"
                 )}
               </Button>
             </div>
@@ -279,7 +279,7 @@ export default function ChecklistAndConfig({
     isWebhookMismatch,
     appendedTwimlUrl,
     webhookLoading,
-    ngrokLoading,
+    tunnelLoading,
     setSelectedPhoneNumber,
   ]);
 
