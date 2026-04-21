@@ -90,9 +90,9 @@ npm run dev
 
 Set your credentials in `webapp/.env` and `websocket-server` - see `webapp/.env.example` and `websocket-server.env.example` for reference.
 
-### Placeholder variables you must review
+### Environment variables
 
-This public copy intentionally uses placeholders. Before running it, copy the example env files and fill in the values for your own environment.
+Copy the example env files and fill in the values for your own environment before running.
 
 Required in `websocket-server/.env`:
 - `OPENAI_API_KEY`
@@ -110,6 +110,9 @@ Usually required for customization in `websocket-server/.env`:
 - `FOUNDER_NAME`
 - `ASSISTANT_NAME`
 - `INBOUND_GREETING`
+- `BUSINESS_TIMEZONE` (IANA zone, default `America/Los_Angeles`)
+- `BUSINESS_HOURS_START` (hour in 24h format, default `8`)
+- `BUSINESS_HOURS_END` (hour in 24h format, default `19`)
 
 Optional integrations in `websocket-server/.env`:
 - `TRANSFER_TARGET_LABEL`
@@ -124,13 +127,14 @@ Optional integrations in `websocket-server/.env`:
 - `BUSINESS_SMS_FROM`
 - `TRANSCRIPT_WEBHOOK_URL`
 - `TRANSCRIPT_WEBHOOK_BEARER_TOKEN`
+- `OPENAI_SAVED_PROMPT_ID` (optional OpenAI saved prompt to use as outbound baseline)
+- `OPENAI_SAVED_PROMPT_VERSION` (default `1`)
 
 Required in `webapp/.env` when using the web UI features:
 - `TWILIO_ACCOUNT_SID`
 - `TWILIO_AUTH_TOKEN`
 
 Important:
-- Do not leave example branding in place for production.
 - Do not commit populated `.env` files.
 - If you are not using calendar, SMS, transfer, or transcript webhook features, leave those related variables blank and disable those flows in your deployment review.
 
@@ -179,15 +183,13 @@ Rules:
 2. Updates the active Twilio call to `/twiml-transfer`.
 3. `/twiml-transfer` dials the configured transfer target and uses `/twiml-transfer-whisper` to provide a short pre-bridge whisper context.
 
-Transfer is still restricted to 8:00 AM - 7:00 PM Pacific.
+Transfer is gated by configured business hours.
 
 ## Transcript webhook auth
 
 Transcript and outbound-status webhooks can POST to a generic webhook when configured with:
 - `TRANSCRIPT_WEBHOOK_URL`
 - `TRANSCRIPT_WEBHOOK_BEARER_TOKEN` (optional)
-
-No local config-file fallback is used in the public version.
 
 # Additional Notes
 

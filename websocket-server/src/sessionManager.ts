@@ -67,10 +67,8 @@ export function setOutboundContext(ctx: OutboundContext) {
 
 // ─── Session config builder (matches docs 02-session-config.md) ─────────────
 
-const OUTBOUND_SAVED_PROMPT = {
-  id: "pmpt_69cff9f15dfc8197bda1dddcf41ab1f70ee2dd1dd028273b",
-  version: "1",
-};
+const OUTBOUND_SAVED_PROMPT_ID = process.env.OPENAI_SAVED_PROMPT_ID || "";
+const OUTBOUND_SAVED_PROMPT_VERSION = process.env.OPENAI_SAVED_PROMPT_VERSION || "1";
 
 function buildSessionConfig(isOutbound: boolean, instructions: string, voiceName: string, tools: any[]) {
   // model + type are set via the WS URL, not in session.update
@@ -89,10 +87,9 @@ function buildSessionConfig(isOutbound: boolean, instructions: string, voiceName
   };
 
   if (isOutbound) {
-    sessionConfig.prompt = OUTBOUND_SAVED_PROMPT;
-    // Keep the saved server-side prompt as the baseline, but layer in
-    // call-specific direct instructions so each outbound mission can vary.
-    // Direct session fields override overlapping prompt fields per RTM docs.
+    if (OUTBOUND_SAVED_PROMPT_ID) {
+      sessionConfig.prompt = { id: OUTBOUND_SAVED_PROMPT_ID, version: OUTBOUND_SAVED_PROMPT_VERSION };
+    }
     sessionConfig.instructions = instructions;
   } else {
     sessionConfig.instructions = instructions;
@@ -896,7 +893,7 @@ function getInboundInstructions(): string {
   return `You are ${ASSISTANT_NAME}, the phone agent for ${COMPANY_NAME}.
 
 VOICE STYLE:
-- calm the fuck down, downflect the end of a sentence
+- calm, composed, downflect the end of a sentence
 - think late night radio DJ voice — that's you
 - relaxed, unhurried, low energy, confident
 
@@ -910,7 +907,7 @@ Your role:
 - Professional, concise, calm. Nothing rattles you.
 - Schedule appointments, answer service questions, take messages, transfer to a teammate when configured
 - Keep responses to 1-2 sentences. Speak naturally.
-- Treat ordinary frustration, cursing, sarcasm, or "fuck sake" style remarks as normal phone conversation, not as a mental health crisis.
+- Treat ordinary frustration, cursing, or sarcasm as normal phone conversation, not as a mental health crisis.
 - Do not suggest the caller talk to a trusted person, seek professional help, or use support resources unless they clearly ask for mental health help or express imminent risk of self-harm.
 - If the caller sounds annoyed, just acknowledge it briefly and move the call forward, for example: "Yeah, I hear you. What can I help with?"
 

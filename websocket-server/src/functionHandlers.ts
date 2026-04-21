@@ -20,7 +20,9 @@ const ASSISTANT_NAME = process.env.ASSISTANT_NAME || "Avery";
 const COMPANY_NAME = process.env.COMPANY_NAME || "Example Company";
 const COMPANY_DOMAIN = process.env.COMPANY_DOMAIN || "example.com";
 const BUSINESS_SMS_FROM = process.env.BUSINESS_SMS_FROM || "";
-const TIMEZONE = "America/Los_Angeles";
+const TIMEZONE = process.env.BUSINESS_TIMEZONE || "America/Los_Angeles";
+const BUSINESS_HOURS_START = parseInt(process.env.BUSINESS_HOURS_START || "8", 10);
+const BUSINESS_HOURS_END = parseInt(process.env.BUSINESS_HOURS_END || "19", 10);
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -338,7 +340,7 @@ functions.push({
     name: "transfer_call",
     type: "function",
     description:
-      `Warm transfer the current call to ${TRANSFER_TARGET_LABEL}. Available between 8:00 AM and 7:00 PM Pacific. ` +
+      `Warm transfer the current call to ${TRANSFER_TARGET_LABEL}. Available during configured business hours. ` +
       "Use when the caller asks to speak with a person immediately or when an immediate live handoff is the best next step. " +
       `Before transferring, briefly tell ${TRANSFER_TARGET_LABEL} why the caller is being transferred.`,
     parameters: {
@@ -369,12 +371,13 @@ functions.push({
       const now = nowPT();
       const hour = now.getHours();
 
-      // Enforce hours: 8 AM - 7 PM PT
-      if (hour < 8 || hour >= 19) {
+      // Enforce configured business hours
+      if (hour < BUSINESS_HOURS_START || hour >= BUSINESS_HOURS_END) {
         return JSON.stringify({
           success: false,
-          error: "Transfer not available outside 8:00 AM - 7:00 PM Pacific. Please schedule a callback instead.",
-          current_time_pt: `${String(hour).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")} PT`,
+          error: "Transfer not available outside configured business hours. Please schedule a callback instead.",
+          current_time: `${String(hour).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`,
+          timezone: TIMEZONE,
         });
       }
 
@@ -540,7 +543,7 @@ functions.push({
   schema: {
     name: "get_current_time",
     type: "function",
-    description: "Get the current date and time in Pacific timezone. Use to determine business hours, scheduling eligibility, etc.",
+    description: "Get the current date and time in the configured business timezone. Use to determine business hours, scheduling eligibility, etc.",
     parameters: {
       type: "object",
       properties: {},
@@ -550,8 +553,8 @@ functions.push({
   handler: async () => {
     const now = nowPT();
     const hour = now.getHours();
-    const transferAvailable = hour >= 8 && hour < 19;
-    const appointmentsToday = hour < 14; // Can still book if before 2 PM (2-hour buffer for 4 PM last slot)
+    const transferAvailable = hour >= BUSINESS_HOURS_START && hour < BUSINESS_HOURS_END;
+    const appointmentsToday = hour < 14; // 2-hour buffer from the last available slot
     const dayOfWeek = now.getDay();
     const isWeekday = dayOfWeek > 0 && dayOfWeek < 6;
 
